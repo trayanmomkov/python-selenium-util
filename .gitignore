@@ -188,3 +188,5 @@ crashlytics.properties
 crashlytics-build.properties
 fabric.properties
 
+geckodriver
+geckodriver.log

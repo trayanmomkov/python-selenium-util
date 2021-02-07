@@ -27,13 +27,17 @@ def init(driver_name):
     return driver
 
 
-def find_by_text(element, text):
-    elements = element.find_elements_by_xpath(".//*[contains(text(), '" + text + "')]")
-    enabled_and_displayed = []
+def enabled_and_displayed(elements):
+    enabled_and_displayed_elements = []
     for elem in elements:
         if elem.is_enabled() and elem.is_displayed():
-            enabled_and_displayed.append(elem)
-    return enabled_and_displayed
+            enabled_and_displayed_elements.append(elem)
+    return enabled_and_displayed_elements
+
+
+def find_by_text(element, text):
+    elements = element.find_elements_by_xpath(".//*[contains(text(), '" + text + "')]")
+    return enabled_and_displayed(elements)
 
 
 def find_first_by_text(element, text):
@@ -53,11 +57,7 @@ def find_first_parent_by_tag(element, tag):
 
 def find_inputs(element):
     elements = element.find_elements_by_xpath(".//input")
-    enabled_and_displayed = []
-    for elem in elements:
-        if elem.is_enabled() and elem.is_displayed():
-            enabled_and_displayed.append(elem)
-    return enabled_and_displayed
+    return enabled_and_displayed(elements)
 
 
 def find_first_input(element):
@@ -80,3 +80,30 @@ def find_input_for_label(element, label):
         return find_first_input(find_parent(find_first_by_text(element, label)))
     except NoSuchElementException as ex:
         print('Cannot find input for the given label: "' + label + '" ' + ex.msg)
+
+
+def find_buttons_by_text(element, text):
+    elements = element.find_elements_by_xpath(f'.//button[text()="{text}"]')
+    return enabled_and_displayed(elements)
+
+
+def find_first_button_by_text(element, text):
+    elements = find_buttons_by_text(element, text)
+    if elements:
+        return elements[0]
+    else:
+        print('Cannot find buttons with caption: "' + text + '"')
+
+
+def find_buttons_by_partial_text(element, text):
+    elements = element.find_elements_by_xpath(f'.//button[contains(text(), "{text}")]')
+    return enabled_and_displayed(elements)
+
+
+def find_first_button_by_partial_text(element, text):
+    elements = find_buttons_by_partial_text(element, text)
+    if elements:
+        return elements[0]
+    else:
+        print('Cannot find buttons with caption: "' + text + '"')
+
